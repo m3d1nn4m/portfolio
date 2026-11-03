@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Your Name – UI/UX Designer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600&display=swap">
+<style>
+/* ===== Tokens ===== */
+:root{
+  --bg:#0A0A12;--bg2:#10101C;--panel:#161628;
+  --ink:#EDEAD8;--mut:#A9A8BD;
+  --indigo:#5B54D6;--cyan:#3FCFBF;--gold:#F2C94C;
+  --sh:#030308;--line:#2C2C4A;--dim:#3A3A60;
+  --bd:3px solid var(--line);
+  --px:'Press Start 2P','Courier New',monospace;
+  --body:'Pixelify Sans','Trebuchet MS',sans-serif;
+  color-scheme:dark;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+
+/* ===== Base ===== */
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.2rem/1.5 var(--body);overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:4px solid var(--cyan);outline-offset:3px}
+::selection{background:var(--indigo);color:#fff}
+.wrap{max-width:66rem;margin:0 auto;padding:0 1.25rem}
+/* Alternating section backgrounds rely on section order: work (plain), experience (tinted), ... */
+section{padding:4rem 0}
+section:nth-of-type(even){background:var(--bg2)}
+h2{font:400 clamp(.95rem,2.4vw,1.25rem)/1.4 var(--px);margin:0 0 2rem;display:flex;align-items:center;gap:.8rem}
+h2::before{content:'';flex:none;width:1rem;height:1rem;background:var(--gold);clip-path:polygon(0 0,100% 50%,0 100%)}
+@keyframes blink{50%{opacity:0}}
+
+/* Shared "pixel panel" look */
+.level-detail,.job,.steps li{background:var(--panel);border:var(--bd);box-shadow:5px 5px 0 var(--sh)}
+/* Shared chip look */
+.tools li,.job-skills li{border:var(--bd);font-size:1.05rem}
+
+/* ===== Header ===== */
+header{position:sticky;top:0;z-index:20;background:var(--sh);border-bottom:4px solid var(--panel)}
+.header-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1.25rem;padding-top:.8rem;padding-bottom:.8rem}
+.logo{font:400 .85rem var(--px);text-decoration:none;color:var(--gold)}
+.logo span{color:var(--cyan)}
+nav{display:flex;gap:1.25rem}
+nav a{text-decoration:none;color:var(--mut)}
+nav a:hover{color:var(--gold)}
+
+/* ===== Hero ===== */
+.hero{position:relative;padding:3.5rem 0 4rem;overflow:hidden;background:var(--bg)}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}
+.hero-layout{position:relative;display:grid;gap:2.5rem;grid-template-columns:1.25fr 1fr;align-items:center}
+.hero h1{font:400 clamp(1.15rem,3.6vw,2.2rem)/1.55 var(--px);margin:0 0 1.2rem;max-width:24ch;text-shadow:4px 4px 0 var(--sh)}
+.hero h1 span{color:var(--gold)}
+.hero h1::after{content:'';display:inline-block;width:.55em;height:1em;background:var(--cyan);margin-left:.35em;vertical-align:-.12em;animation:blink 1s steps(2) infinite}
+.hero p{max-width:34rem;margin:0 0 1.6rem;color:var(--ink);font-size:1.3rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2.2rem}
+.terminal{background:rgba(3,3,8,.9);border:var(--bd);box-shadow:6px 6px 0 var(--sh)}
+.terminal-bar{display:flex;align-items:center;gap:.4rem;padding:.55rem .8rem;border-bottom:var(--bd);color:var(--mut);font-size:1rem}
+.terminal-bar i{width:.65rem;height:.65rem;background:var(--dim)}
+.terminal-bar i:first-child{background:var(--gold)}
+.terminal-bar span{margin-left:.5rem}
+.terminal-output{margin:0;padding:1rem 1.1rem;min-height:13.5rem;font:400 1.15rem/1.6 var(--body);white-space:pre-wrap;color:var(--ink)}
+.terminal-output::after{content:'';display:inline-block;width:.6em;height:1em;background:var(--gold);vertical-align:-.15em;margin-left:.1em;animation:blink 1s steps(2) infinite}
+
+/* ===== Buttons (links) ===== */
+.btn{display:inline-flex;align-items:center;gap:.7rem;font:400 .8rem/1.4 var(--px);text-decoration:none;padding:1rem 1.2rem;border:4px solid var(--sh);box-shadow:5px 5px 0 var(--sh);transition:transform .1s,box-shadow .1s}
+.btn--primary{background:var(--gold);color:var(--sh)}
+.btn--light{background:var(--ink);color:var(--sh)}
+.btn--primary::before{content:'';width:.7rem;height:.7rem;background:var(--sh);clip-path:polygon(0 0,100% 50%,0 100%)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--indigo)}
+
+/* ===== Level select ===== */
+.level-scroller{overflow-x:auto;padding:2.6rem .6rem 1rem;margin:0 -.6rem;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
+.level-track{position:relative;display:flex;justify-content:space-between;min-width:34rem}
+.level-track::before{content:'';position:absolute;left:1.7rem;right:1.7rem;top:50%;height:6px;margin-top:-3px;background:repeating-linear-gradient(90deg,var(--dim) 0 12px,transparent 12px 24px)}
+.level-node{all:unset;box-sizing:border-box;position:relative;z-index:1;width:3.4rem;height:3.4rem;display:grid;place-items:center;background:var(--bg);border:var(--bd);box-shadow:4px 4px 0 var(--sh);color:var(--mut);font:400 .75rem var(--px);cursor:pointer;transition:transform .1s,background .1s,color .1s,border-color .1s}
+.level-node:hover,.level-node:focus-visible{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
+.level-node.is-selected{background:var(--gold);color:var(--sh);border-color:var(--gold)}
+.level-node:active{transform:translateY(2px);box-shadow:1px 1px 0 var(--sh)}
+.level-node.is-opened::after{content:'';position:absolute;right:-.55rem;top:-.65rem;width:1.15rem;height:1.15rem;background:var(--cyan);clip-path:polygon(50% 0,62% 36%,100% 38%,70% 60%,81% 100%,50% 76%,19% 100%,30% 60%,0 38%,38% 36%)}
+.level-player{position:absolute;top:-2.3rem;left:0;width:4px;height:4px;z-index:2;pointer-events:none;transition:transform .4s steps(8);animation:hop .6s steps(2) infinite}
+@keyframes hop{50%{margin-top:-4px}}
+.level-detail{display:grid;grid-template-columns:15rem 1fr auto;gap:1.2rem;align-items:center;margin-top:1.2rem}
+.level-thumb{display:block;align-self:stretch;background:var(--bg);border-right:var(--bd)}
+.level-thumb svg,.level-thumb img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:20/9}
+.level-info{padding:.9rem 0}
+.level-info small{display:block;color:var(--cyan);font:400 .58rem var(--px);margin-bottom:.5rem}
+.level-info b{display:block;font-weight:600;font-size:1.4rem;line-height:1.2}
+.level-info span{color:var(--mut);font-size:1.05rem}
+.level-info p{margin:.4rem 0 0;max-width:34rem;font-size:1.1rem;line-height:1.4}
+.level-open{all:unset;cursor:pointer;margin:0 1.2rem;padding:.9rem 1rem;background:var(--sh);color:#fff;font:400 .62rem/1.4 var(--px);border:var(--bd);border-color:var(--sh);box-shadow:4px 4px 0 var(--indigo);transition:color .1s,transform .1s,box-shadow .1s}
+.level-open:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--indigo)}
+.level-open:active{color:var(--gold);transform:translate(3px,3px);box-shadow:1px 1px 0 var(--sh)}
+.level-open.is-opened{color:var(--gold)}
+
+/* ===== Experience ===== */
+.experience-list{list-style:none;margin:0;padding:0;display:grid;gap:1.25rem}
+.job{display:grid;grid-template-columns:10rem 1fr;gap:1.5rem;align-items:start;padding:1.25rem 1.4rem;transition:transform .12s,border-color .12s,box-shadow .12s}
+.job:hover{transform:translate(-3px,-3px);border-color:var(--gold);box-shadow:8px 8px 0 var(--indigo)}
+.job-dates b{display:block;font:400 .62rem/1.7 var(--px);color:var(--cyan)}
+.job-dates span{color:var(--mut);font-size:1.05rem}
+.job-body{display:flex;gap:1rem;align-items:flex-start}
+.job-badge{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--bg);border:var(--bd);font:400 .65rem var(--px);color:var(--gold)}
+.job h3{margin:0;font-weight:600;font-size:1.4rem;line-height:1.25}
+.job.is-current h3::after{content:'NOW';margin-left:.7rem;font:400 .55rem var(--px);background:var(--gold);color:var(--sh);padding:.3rem .45rem;vertical-align:.2rem}
+.job-company{margin:.15rem 0 .8rem;color:var(--mut)}
+.job-skills{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;margin:0;padding:0}
+.job-skills li{background:var(--bg);padding:.05rem .65rem}
+.job-skills li:last-child{color:var(--mut)}
+
+/* ===== Process ===== */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1.5rem;counter-reset:step}
+.steps li{counter-increment:step;padding:1rem}
+.steps li::before{content:'STEP ' counter(step);display:block;font:400 .6rem var(--px);color:var(--cyan);margin-bottom:.7rem}
+.steps b{display:block;font-weight:600;font-size:1.3rem}
+.steps span{color:var(--mut);font-size:1.1rem}
+
+/* ===== About ===== */
+.about{display:grid;gap:2.5rem;grid-template-columns:1fr 1fr;align-items:start}
+.about p{margin:0 0 1rem;max-width:30rem}
+.tools{display:flex;flex-wrap:wrap;gap:.6rem;list-style:none;padding:0;margin:1.5rem 0 0}
+.tools li{padding:.15rem .7rem;background:var(--panel)}
+.skill{display:grid;grid-template-columns:9.5rem 1fr;align-items:center;gap:1rem;margin-bottom:.9rem}
+.skill-track{position:relative;width:180px;height:14px;background:repeating-linear-gradient(90deg,#23233F 0 14px,transparent 14px 18px)}
+.skill-track i{position:absolute;left:0;top:0;height:14px;width:calc(var(--v)*18px);background:repeating-linear-gradient(90deg,var(--cyan) 0 14px,transparent 14px 18px)}
+
+/* ===== Contact & footer ===== */
+.contact p{max-width:30rem;color:var(--mut);margin:0 0 1.5rem}
+.copy-email{all:unset;cursor:pointer;display:inline-flex;flex-wrap:wrap;align-items:center;gap:1rem;background:var(--gold);color:var(--sh);border:4px solid var(--sh);box-shadow:6px 6px 0 var(--indigo);padding:1.1rem 1.4rem;font:400 clamp(.7rem,2.4vw,1rem)/1.4 var(--px);transition:transform .1s,box-shadow .1s}
+.copy-email:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--cyan)}
+.copy-email small{background:var(--sh);color:var(--gold);padding:.4rem .6rem;font-size:.6rem;min-width:5.5rem;text-align:center}
+/* Must stay after the :hover rules above so the pressed state wins */
+.btn:active,.copy-email:active{transform:translate(4px,4px);box-shadow:1px 1px 0 var(--sh)}
+footer{padding:2rem 0 3rem;background:var(--sh);color:var(--mut);font-size:1.05rem}
+
+/* ===== Case file dialog ===== */
+dialog{width:min(64rem,calc(100% - 2rem));max-height:calc(100dvh - 2rem);overflow-y:auto;margin:auto;padding:0;background:var(--panel);color:var(--ink);border:var(--bd);border-radius:0;box-shadow:10px 10px 0 var(--sh)}
+dialog::backdrop{background:rgba(2,2,6,.9)}
+dialog[open]{animation:pop .2s steps(4)}
+@keyframes pop{from{opacity:0;transform:scale(.94)}}
+.case-header{padding:1.5rem 1.75rem 1.1rem}
+.case-header h3{font:400 clamp(1rem,3vw,1.6rem)/1.5 var(--px);margin:0 0 .6rem;color:var(--gold)}
+.case-meta{margin:0;color:var(--mut)}
+.case-cover{background:var(--bg);border-block:var(--bd)}
+.case-cover svg,.case-cover img{display:block;width:100%;aspect-ratio:20/9;max-height:26rem;object-fit:cover}
+.case-body{padding:.25rem 1.75rem 0}
+.case-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:1rem;padding:1.25rem 0}
+.case-facts small{display:block;color:var(--cyan);font:400 .55rem var(--px);margin-bottom:.4rem}
+.case-facts b{font-weight:600}
+.case-section{display:grid;grid-template-columns:9rem 1fr;gap:.5rem 2rem;padding:1.4rem 0;border-top:4px dashed var(--line)}
+.case-section h4{margin:0;font:400 .7rem/1.6 var(--px);color:var(--cyan)}
+.case-section p{margin:0;font-size:1.25rem;line-height:1.55;max-width:42rem}
+.metrics{display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;margin-top:1.2rem}
+.metrics b{display:block;font:400 1.7rem/1.2 var(--px);color:var(--gold)}
+.metrics span{color:var(--mut);font-size:1.05rem}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.gallery img,.image-placeholder{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border:var(--bd)}
+.image-placeholder{display:grid;place-items:center;text-align:center;border:4px dashed var(--dim);background:var(--bg);color:var(--mut);font-size:1.05rem;line-height:1.4}
+.case-footer{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.25rem 1.75rem 1.5rem}
+.case-nav{display:flex;align-items:center;gap:.8rem;color:var(--mut)}
+.case-footer button{all:unset;cursor:pointer;font:400 .62rem/1 var(--px);padding:.8rem .9rem;border:var(--bd);background:var(--bg);color:var(--ink)}
+.case-footer button:hover,.case-footer .case-close{background:var(--gold);color:var(--sh)}
+
+/* ===== Focus ring for controls that use `all:unset` ===== */
+:is(.level-node,.level-open,.copy-email,.case-footer button):focus-visible{outline:4px solid var(--cyan);outline-offset:3px}
+.copy-email:focus-visible{outline-offset:4px}
+
+/* ===== 3D star that follows the mouse ===== */
+#star-3d{position:fixed;top:0;left:0;width:96px;height:96px;z-index:45;pointer-events:none;image-rendering:pixelated;opacity:0;transition:opacity .2s;will-change:transform}
+#star-3d.is-visible{opacity:1}
+@media (hover:none){#star-3d{display:none}}
+
+/* ===== Responsive ===== */
+@media (max-width:56rem){
+  .about,.hero-layout{grid-template-columns:1fr}
+}
+@media (max-width:48rem){
+  .level-detail{grid-template-columns:1fr;gap:.8rem}
+  .level-thumb{border-right:0;border-bottom:var(--bd)}
+  .level-thumb svg,.level-thumb img{aspect-ratio:20/7}
+  .level-info{padding:0 1rem}
+  .level-open{margin:0 1rem 1rem;text-align:center}
+  .job{grid-template-columns:1fr;gap:.8rem}
+  .case-section,.gallery{grid-template-columns:1fr}
+  .case-header,.case-body,.case-footer{padding-left:1.1rem;padding-right:1.1rem}
+}
+@media (max-width:40rem){
+  body{font-size:1.1rem}
+  section{padding:3rem 0}
+  .header-row nav{order:3;width:100%;justify-content:space-between;font-size:1rem}
+  .hero-actions .btn{flex:1;justify-content:center}
+  .skill{grid-template-columns:1fr;gap:.3rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap header-row">
+    <a class="logo" href="#top">YOUR<span>NAME</span></a>
+    <nav>
+      <a href="#work">Work</a><a href="#experience">Experience</a><a href="#process">Process</a><a href="#about">About</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="wrap hero-layout">
+      <div>
+        <h1>UI/UX designer who makes products <span>fun</span> to use</h1>
+        <p>Hi, I’m Your Name. Move your mouse across this screen to light up the pixels, then pick a project below.</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#work">View projects</a>
+          <a class="btn btn--light" href="#contact">Say hello</a>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><i></i><i></i><i></i><span>player.txt</span></div>
+        <pre class="terminal-output" id="terminal-output"></pre>
+      </div>
+    </div>
+  </div>
+
+  <section id="work"><div class="wrap">
+    <h2>Level select</h2>
+    <div class="level-scroller">
+      <div class="level-track" id="level-track" role="group" aria-label="Project levels">
+        <span class="level-player" id="player" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="level-detail">
+      <span class="level-thumb" id="level-thumb"></span>
+      <div class="level-info">
+        <small id="level-label"></small>
+        <b id="level-title"></b>
+        <span id="level-meta"></span>
+        <p id="level-summary"></p>
+      </div>
+      <button type="button" class="level-open" id="level-open">Open case file</button>
+    </div>
+  </div></section>
+
+  <section id="experience"><div class="wrap">
+    <h2>Quest log</h2>
+    <ol class="experience-list">
+      <li class="job is-current">
+        <div class="job-dates"><b>Jan 2024 – Present</b><span>2 yrs 11 mos</span></div>
+        <div class="job-body">
+          <div class="job-badge" aria-hidden="true">HS</div>
+          <div>
+            <h3>UI/UX Designer</h3>
+            <p class="job-company">Helius Systems · Full-time</p>
+            <ul class="job-skills"><li>Adobe Illustrator</li><li>Adobe InDesign</li><li>+24 skills</li></ul>
+          </div>
+        </div>
+      </li>
+      <li class="job is-current">
+        <div class="job-dates"><b>Feb 2018 – Present</b><span>8 yrs 10 mos</span></div>
+        <div class="job-body">
+          <div class="job-badge" aria-hidden="true">FL</div>
+          <div>
+            <h3>Designer</h3>
+            <p class="job-company">Freelance</p>
+            <ul class="job-skills"><li>Conceptualizer</li><li>Design Thinking</li><li>+18 skills</li></ul>
+          </div>
+        </div>
+      </li>
+      <li class="job">
+        <div class="job-dates"><b>Oct 2022 – Jan 2024</b><span>1 yr 4 mos</span></div>
+        <div class="job-body">
+          <div class="job-badge" aria-hidden="true">AG</div>
+          <div>
+            <h3>UI/UX Designer</h3>
+            <p class="job-company">Arkevo Group · Full-time</p>
+            <ul class="job-skills"><li>Conceptualizer</li><li>Design Thinking</li><li>+19 skills</li></ul>
+          </div>
+        </div>
+      </li>
+      <li class="job">
+        <div class="job-dates"><b>Jan 2022 – Oct 2022</b><span>10 mos</span></div>
+        <div class="job-body">
+          <div class="job-badge" aria-hidden="true">KA</div>
+          <div>
+            <h3>UI/UX &amp; Graphic Designer</h3>
+            <p class="job-company">Karrota · Full-time</p>
+            <ul class="job-skills"><li>Conceptualizer</li><li>Design Thinking</li><li>+17 skills</li></ul>
+          </div>
+        </div>
+      </li>
+      <li class="job">
+        <div class="job-dates"><b>Jul 2020 – Jan 2022</b><span>1 yr 7 mos</span></div>
+        <div class="job-body">
+          <div class="job-badge" aria-hidden="true">FB</div>
+          <div>
+            <h3>UI/UX &amp; Graphic Designer</h3>
+            <p class="job-company">Flex Business Solutions · Full-time</p>
+            <ul class="job-skills"><li>Conceptualizer</li><li>Design Thinking</li><li>+15 skills</li></ul>
+          </div>
+        </div>
+      </li>
+      <li class="job">
+        <div class="job-dates"><b>Oct 2018 – Jul 2020</b><span>1 yr 10 mos</span></div>
+        <div class="job-body">
+          <div class="job-badge" aria-hidden="true">SP</div>
+          <div>
+            <h3>Graphic Designer</h3>
+            <p class="job-company">Spontan</p>
+            <ul class="job-skills"><li>Conceptualizer</li><li>Design Thinking</li><li>+10 skills</li></ul>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div></section>
+
+  <section id="process"><div class="wrap">
+    <h2>How I play</h2>
+    <ol class="steps">
+      <li><b>Investigate</b><span>Interviews, analytics and a clear problem statement.</span></li>
+      <li><b>Explore</b><span>Flows and wireframes to test ideas fast.</span></li>
+      <li><b>Design</b><span>High-fidelity UI on a reusable component system.</span></li>
+      <li><b>Test</b><span>Usability sessions, then fixes before launch.</span></li>
+      <li><b>Hand off</b><span>Specs and support until developers ship it.</span></li>
+    </ol>
+  </div></section>
+
+  <section id="about"><div class="wrap">
+    <h2>Player profile</h2>
+    <div class="about">
+      <div>
+        <p>I’m a designer with a background in [your background]. I care about small decisions, like a clear error message or a button that says exactly what it does.</p>
+        <p>I work from research through to developer handoff.</p>
+        <ul class="tools"><li>Figma</li><li>Prototyping</li><li>Usability testing</li><li>Design systems</li></ul>
+      </div>
+      <div>
+        <!-- Skill levels are out of 10 -->
+        <div class="skill"><span>Research</span><div class="skill-track" role="img" aria-label="Research: 9 out of 10"><i style="--v:9"></i></div></div>
+        <div class="skill"><span>Wireframing</span><div class="skill-track" role="img" aria-label="Wireframing: 10 out of 10"><i style="--v:10"></i></div></div>
+        <div class="skill"><span>Prototyping</span><div class="skill-track" role="img" aria-label="Prototyping: 9 out of 10"><i style="--v:9"></i></div></div>
+        <div class="skill"><span>Design systems</span><div class="skill-track" role="img" aria-label="Design systems: 8 out of 10"><i style="--v:8"></i></div></div>
+        <div class="skill"><span>Accessibility</span><div class="skill-track" role="img" aria-label="Accessibility: 8 out of 10"><i style="--v:8"></i></div></div>
+        <div class="skill"><span>HTML and CSS</span><div class="skill-track" role="img" aria-label="HTML and CSS: 6 out of 10"><i style="--v:6"></i></div></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="contact"><div class="wrap contact">
+    <h2>Continue?</h2>
+    <p>Have a project in mind? Press the button to copy my email.</p>
+    <button class="copy-email" id="copy-email" type="button" aria-label="Copy email address">
+      <span>hello@example.com</span><small id="copy-status" aria-live="polite">COPY</small>
+    </button>
+  </div></section>
+</main>
+
+<footer><div class="wrap">© 2026 Your Name. Thanks for playing.</div></footer>
+
+<canvas id="star-3d" width="48" height="48" aria-hidden="true"></canvas>
+
+<dialog id="case-dialog" aria-labelledby="case-title">
+  <div class="case-header"><h3 id="case-title"></h3><p class="case-meta" id="case-meta"></p></div>
+  <div class="case-cover" id="case-cover"></div>
+  <div class="case-body">
+    <div class="case-facts" id="case-facts"></div>
+    <div class="case-section"><h4>Challenge</h4><p id="case-challenge"></p></div>
+    <div class="case-section"><h4>My role</h4><p id="case-role"></p></div>
+    <div class="case-section"><h4>Approach</h4><p id="case-approach"></p></div>
+    <div class="case-section"><h4>Outcome</h4><div><p id="case-outcome"></p><div class="metrics" id="case-metrics"></div></div></div>
+    <div class="case-section"><h4>Gallery</h4><div class="gallery" id="case-gallery"></div></div>
+  </div>
+  <div class="case-footer">
+    <div class="case-nav">
+      <button type="button" id="case-prev" aria-label="Previous project">&lt;</button>
+      <span id="case-counter" aria-live="polite"></span>
+      <button type="button" id="case-next" aria-label="Next project">&gt;</button>
+    </div>
+    <button type="button" class="case-close" id="case-close">Close</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ==========================================================================
+     Content
+     ========================================================================== */
+  const PROJECTS = [
+    {
+      title: 'Fintech app onboarding', platform: 'Mobile', year: 2026,
+      challenge: 'Nearly half of new users quit during identity checks.',
+      role: 'Lead designer: research, flows, UI and prototype testing.',
+      outcome: 'Three short steps replaced one long form, and sign-up completion rose 31%.',
+      duration: '10 weeks', tools: 'Figma, Maze, Amplitude',
+      approach: 'Mapped where users dropped off, tested three flows with 12 people, and cut the form into three short steps with clear progress.',
+      metrics: [['31%', 'higher sign-up completion'], ['3', 'steps instead of one long form']],
+    },
+    {
+      title: 'Clinic booking dashboard', platform: 'Web', year: 2025,
+      challenge: 'Front-desk staff needed six clicks to move one appointment.',
+      role: 'UX and UI designer, with shadowing sessions at two clinics.',
+      outcome: 'Rebooking now takes two clicks, and training time dropped from a day to an hour.',
+      duration: '8 weeks', tools: 'Figma, FigJam, Hotjar',
+      approach: 'Shadowed staff at two clinics, mapped every rebooking path, then prototyped drag-and-drop scheduling and tested it with front-desk teams.',
+      metrics: [['2', 'clicks to rebook'], ['1 hr', 'training time, down from a day']],
+    },
+    {
+      title: 'Travel planner redesign', platform: 'Web and mobile', year: 2025,
+      challenge: 'Groups planned trips in chat threads and lost track of options.',
+      role: 'Product designer, from concept to design system.',
+      outcome: 'Shared boards with voting launched, and repeat trips grew 22%.',
+      duration: '12 weeks', tools: 'Figma, Notion, Useberry',
+      approach: 'Interviewed travel groups, found that options got lost in chat, and designed shared boards where everyone can compare and vote.',
+      metrics: [['22%', 'more repeat trips'], ['4.6/5', 'usability rating']],
+    },
+    {
+      title: 'Smart home control app', platform: 'Mobile', year: 2025,
+      challenge: 'Controls for 30 devices lived in separate, inconsistent screens.',
+      role: 'Lead designer, information architecture and UI.',
+      outcome: 'Rooms and scenes now sit on one home screen, and support tickets fell 40%.',
+      duration: '9 weeks', tools: 'Figma, ProtoPie, Lookback',
+      approach: 'Sorted 30 devices into rooms and scenes, then tested one home screen against the old separate tabs.',
+      metrics: [['40%', 'fewer support tickets'], ['1', 'home screen for every device']],
+    },
+    {
+      title: 'Learning platform for teens', platform: 'Web', year: 2024,
+      challenge: 'Lessons felt like homework, so students left after one session.',
+      role: 'UX researcher and designer, with weekly student tests.',
+      outcome: 'Short missions and clear progress lifted week-two retention from 18% to 41%.',
+      duration: '14 weeks', tools: 'Figma, Miro, Dovetail',
+      approach: 'Ran weekly sessions with students, replaced long lessons with short missions and made progress visible at every step.',
+      metrics: [['41%', 'week-two retention, up from 18%'], ['5 min', 'average mission length']],
+    },
+    {
+      title: 'Design system for a retailer', platform: 'Web and mobile', year: 2024,
+      challenge: 'Five teams shipped five versions of the same button.',
+      role: 'Design system designer: tokens, components and documentation.',
+      outcome: '180 components shipped and new pages now take days instead of weeks.',
+      duration: '16 weeks', tools: 'Figma, Storybook, Tokens Studio',
+      approach: 'Audited every component across five teams, merged duplicates, and documented each one with usage rules and code.',
+      metrics: [['180', 'components shipped'], ['Days', 'not weeks, to build a new page']],
+    },
+    {
+      title: 'Accessibility audit and fix', platform: 'Web', year: 2023,
+      challenge: 'A public booking site failed basic screen reader and contrast checks.',
+      role: 'Accessibility lead: audit, redesign and developer pairing.',
+      outcome: 'The site passed WCAG 2.2 AA, and phone bookings dropped as online use grew.',
+      duration: '6 weeks', tools: 'Figma, NVDA, axe',
+      approach: 'Audited against WCAG 2.2, fixed contrast and focus order, and tested with screen reader users alongside developers.',
+      metrics: [['AA', 'WCAG 2.2 level reached'], ['0', 'critical issues left']],
+    },
+  ];
+
+  /* ===== REPLACE YOUR IMAGES HERE =====
+     One entry per project, in the same order as PROJECTS above.
+     cover = main image (level preview and top of the case file). shots = gallery images.
+     Put an image URL or a data:image/... string between the quotes.
+     Leave '' to show the placeholder (an empty cover shows the drawn illustration).
+     Tip: 1600x720 for covers, 1200x750 for gallery shots. */
+  const PROJECT_IMAGES = [
+    { cover: '', shots: ['', '', ''] },
+    { cover: '', shots: ['', '', ''] },
+    { cover: '', shots: ['', '', ''] },
+    { cover: '', shots: ['', '', ''] },
+    { cover: '', shots: ['', '', ''] },
+    { cover: '', shots: ['', '', ''] },
+    { cover: '', shots: ['', '', ''] },
+  ];
+
+  /* ==========================================================================
+     Helpers
+     ========================================================================== */
+  const $ = (id) => document.getElementById(id);
+  const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const projectLabel = (project) => `${project.platform} · ${project.year}`;
+  const escapeAttr = (text) => String(text)
+    .replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+  /** Tiny element builder: strings become text nodes, so content is never parsed as HTML. */
+  function h(tag, attrs = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, value);
+    node.append(...children);
+    return node;
+  }
+
+  /* ==========================================================================
+     Project covers (image if provided, otherwise a seeded pixel mosaic)
+     ========================================================================== */
+  const MOSAIC = { cols: 20, rows: 9, cell: 20 };
+
+  function createSeededRandom(seed) {
+    let state = seed;
+    return () => {
+      state = (state * 9301 + 49297) % 233280;
+      return state / 233280;
+    };
+  }
+
+  function buildMosaicSvg(index, title) {
+    const { cols, rows, cell } = MOSAIC;
+    const random = createSeededRandom(index * 13 + 5);
+    const goldCell = (index * 37 + 11) % (cols * rows);
+    const accentCell = (index * 59 + 90) % (cols * rows);
+    const cells = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const n = random();
+        let fill = n < .7 ? '#11111F' : n < .9 ? '#171730' : n < .97 ? '#1F2A3E' : '#235B58';
+        const cellIndex = row * cols + col;
+        if (cellIndex === goldCell) fill = '#F2C94C';
+        if (cellIndex === accentCell) fill = '#3A3A8A';
+        cells.push(`<rect x='${col * cell + 1}' y='${row * cell + 1}' width='${cell - 2}' height='${cell - 2}' fill='${fill}'/>`);
+      }
+    }
+    return `<svg viewBox='0 0 ${cols * cell} ${rows * cell}' xmlns='http://www.w3.org/2000/svg' shape-rendering='crispEdges' role='img' aria-label='Abstract cover for ${escapeAttr(title)}'><rect width='${cols * cell}' height='${rows * cell}' fill='#0B0B16'/>${cells.join('')}</svg>`;
+  }
+
+  function markupToElement(markup) {
+    const template = document.createElement('template');
+    template.innerHTML = markup;
+    return template.content.firstElementChild;
+  }
+
+  const getImages = (index) => PROJECT_IMAGES[index] || { cover: '', shots: [] };
+
+  function createCover(index) {
+    const { title } = PROJECTS[index];
+    const { cover } = getImages(index);
+    return cover ? h('img', { src: cover, alt: title }) : markupToElement(buildMosaicSvg(index, title));
+  }
+
+  function createGalleryItem(src, alt, number) {
+    if (src) return h('img', { src, alt, loading: 'lazy' });
+    return h('div', { class: 'image-placeholder', role: 'img', 'aria-label': `Empty image slot: ${alt}` },
+      h('span', {}, `Image ${number}`, h('br'), 'Add your screenshot'));
+  }
+
+  /* ==========================================================================
+     Case file dialog
+     ========================================================================== */
+  function createCaseDialog({ onNavigate }) {
+    const dialog = $('case-dialog');
+    const text = {
+      title: $('case-title'), meta: $('case-meta'), challenge: $('case-challenge'),
+      role: $('case-role'), approach: $('case-approach'), outcome: $('case-outcome'),
+      counter: $('case-counter'),
+    };
+    let currentIndex = 0;
+
+    function render(index) {
+      const project = PROJECTS[index];
+      currentIndex = index;
+
+      text.counter.textContent = `${index + 1} / ${PROJECTS.length}`;
+      text.title.textContent = project.title;
+      text.meta.textContent = projectLabel(project);
+      text.challenge.textContent = project.challenge;
+      text.role.textContent = project.role;
+      text.approach.textContent = project.approach;
+      text.outcome.textContent = project.outcome;
+      $('case-cover').replaceChildren(createCover(index));
+
+      const facts = [['PLATFORM', project.platform], ['YEAR', project.year], ['DURATION', project.duration], ['TOOLS', project.tools]];
+      $('case-facts').replaceChildren(...facts.map(([label, value]) =>
+        h('div', {}, h('small', {}, label), h('b', {}, String(value)))));
+      $('case-metrics').replaceChildren(...project.metrics.map(([value, label]) =>
+        h('div', {}, h('b', {}, value), h('span', {}, label))));
+      $('case-gallery').replaceChildren(...getImages(index).shots.map((src, k) =>
+        createGalleryItem(src, `${project.title} screenshot ${k + 1}`, k + 1)));
+    }
+
+    const step = (delta) => onNavigate((currentIndex + delta + PROJECTS.length) % PROJECTS.length);
+    $('case-close').addEventListener('click', () => dialog.close());
+    $('case-next').addEventListener('click', () => step(1));
+    $('case-prev').addEventListener('click', () => step(-1));
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') step(1);
+      if (event.key === 'ArrowLeft') step(-1);
+    });
+
+    return {
+      show(index) {
+        render(index);
+        if (!dialog.open) dialog.showModal();
+        dialog.scrollTop = 0;
+      },
+    };
+  }
+
+  /* ==========================================================================
+     Level select (map with a hopping pixel player)
+     ========================================================================== */
+  const PLAYER = {
+    pixel: 4,
+    sprite: ['..HHHH..', '.HHHHHH.', '.SSSSSS.', '.SKSSKS.', '..SSSS..', '.PPPPPP.', 'PPPPPPPP', '.PPPPPP.', '.BB..BB.'],
+    colors: { H: '#F2C94C', S: '#FFC9A0', K: '#0A0A12', P: '#5B54D6', B: '#3FCFBF' },
+  };
+  const PLAYER_WIDTH = PLAYER.sprite[0].length * PLAYER.pixel;
+
+  /** Draws the sprite with box-shadows: one shadow per pixel on a single pixel-sized element. */
+  function paintPlayer(element) {
+    const shadows = [];
+    PLAYER.sprite.forEach((row, y) => {
+      [...row].forEach((code, x) => {
+        if (code !== '.') shadows.push(`${x * PLAYER.pixel}px ${y * PLAYER.pixel}px 0 ${PLAYER.colors[code]}`);
+      });
+    });
+    element.style.boxShadow = shadows.join(',');
+  }
+
+  function createLevelSelect({ onOpen }) {
+    const track = $('level-track');
+    const scroller = track.parentElement;
+    const player = $('player');
+    const openButton = $('level-open');
+    const opened = new Set();
+    let selectedIndex = -1;
+
+    const nodes = PROJECTS.map((project, index) => {
+      const node = h('button', { type: 'button', class: 'level-node', 'aria-label': `Level ${index + 1}: ${project.title}` }, pad2(index + 1));
+      // Click selects first, a second click (or the button) opens the case file.
+      node.addEventListener('click', () => (selectedIndex === index ? onOpen(index) : select(index)));
+      node.addEventListener('pointerenter', (event) => { if (event.pointerType === 'mouse') select(index); });
+      node.addEventListener('focus', () => { if (node.matches(':focus-visible')) select(index); });
+      return node;
+    });
+    track.append(...nodes);
+    paintPlayer(player);
+
+    function movePlayerTo(node) {
+      const center = node.offsetLeft + node.offsetWidth / 2;
+      player.style.transform = `translateX(${center - PLAYER_WIDTH / 2}px)`;
+      if (scroller.scrollWidth > scroller.clientWidth) {
+        scroller.scrollTo({ left: center - scroller.clientWidth / 2, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      }
+    }
+
+    function select(index) {
+      const project = PROJECTS[index];
+      selectedIndex = index;
+      nodes.forEach((node, i) => node.classList.toggle('is-selected', i === index));
+      $('level-thumb').replaceChildren(createCover(index));
+      $('level-label').textContent = `LEVEL ${pad2(index + 1)}`;
+      $('level-title').textContent = project.title;
+      $('level-meta').textContent = projectLabel(project);
+      $('level-summary').textContent = project.challenge;
+      openButton.classList.toggle('is-opened', opened.has(index));
+      movePlayerTo(nodes[index]);
+    }
+
+    openButton.addEventListener('click', () => onOpen(selectedIndex));
+    addEventListener('resize', () => select(selectedIndex));
+    select(0);
+
+    return {
+      markOpened(index) {
+        nodes[index].classList.add('is-opened');
+        opened.add(index);
+        select(index);
+      },
+    };
+  }
+
+  /* ==========================================================================
+     Hero: pixel grid that lights up under the pointer
+     ========================================================================== */
+  function initHeroGrid() {
+    const CELL = 14;             // on-screen size of one grid cell (px)
+    const PIXELS_PER_CELL = 3;   // canvas pixels per cell (2 lit + 1 gap)
+    const VISIBLE = .03;         // brightness below which a cell is drawn as "off"
+    const DECAY = .93;
+    const FRAME_INTERVAL = 40;   // ms between frames (~25 fps)
+
+    const hero = document.querySelector('.hero');
+    const canvas = $('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let cols = 0;
+    let rows = 0;
+    let levels = new Float32Array(0);
+
+    function cellColor(v) {
+      if (v <= VISIBLE) return '#10101E';
+      if (v > .65) return `rgba(242,201,76,${v})`;
+      if (v > .3) return `rgba(63,207,191,${v + .2})`;
+      return `rgba(91,84,214,${v + .35})`;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const k = row * cols + col;
+          const v = levels[k];
+          if (v > VISIBLE) levels[k] = v * DECAY;
+          ctx.fillStyle = cellColor(v);
+          ctx.fillRect(col * PIXELS_PER_CELL, row * PIXELS_PER_CELL, PIXELS_PER_CELL - 1, PIXELS_PER_CELL - 1);
+        }
+      }
+    }
+
+    function resize() {
+      const rect = hero.getBoundingClientRect();
+      cols = Math.ceil(rect.width / CELL);
+      rows = Math.ceil(rect.height / CELL);
+      canvas.width = cols * PIXELS_PER_CELL;
+      canvas.height = rows * PIXELS_PER_CELL;
+      levels = new Float32Array(cols * rows);
+      if (prefersReducedMotion) {
+        for (let i = 0; i < 60; i++) levels[Math.floor(Math.random() * levels.length)] = .5;
+      }
+      draw();
+    }
+
+    function light(event, radius, strength) {
+      const rect = hero.getBoundingClientRect();
+      const centerCol = Math.floor((event.clientX - rect.left) / CELL);
+      const centerRow = Math.floor((event.clientY - rect.top) / CELL);
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          const dist2 = dx * dx + dy * dy;
+          if (dist2 > radius * radius) continue;
+          const col = centerCol + dx;
+          const row = centerRow + dy;
+          if (col < 0 || row < 0 || col >= cols || row >= rows) continue;
+          const k = row * cols + col;
+          levels[k] = Math.max(levels[k], dist2 === 0 ? 1 : strength * (1 - dist2 / (radius * radius + 1)));
+        }
+      }
+    }
+
+    resize();
+    addEventListener('resize', resize);
+    if (prefersReducedMotion) return; // static pattern only
+
+    hero.addEventListener('pointermove', (event) => light(event, 2, .8));
+    hero.addEventListener('pointerdown', (event) => light(event, 7, .9));
+
+    // Animate only while the hero is on screen.
+    let visible = true;
+    let running = false;
+    let lastFrame = 0;
+    function tick(timestamp) {
+      if (!visible) { running = false; return; }
+      requestAnimationFrame(tick);
+      if (timestamp - lastFrame < FRAME_INTERVAL) return;
+      lastFrame = timestamp;
+      levels[Math.floor(Math.random() * levels.length)] = .4; // ambient twinkle
+      draw();
+    }
+    function start() {
+      if (running) return;
+      running = true;
+      requestAnimationFrame(tick);
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) start();
+      }).observe(hero);
+    }
+    start();
+  }
+
+  /* ==========================================================================
+     Hero: typed terminal text
+     ========================================================================== */
+  function initTerminal() {
+    const output = $('terminal-output');
+    const text = [
+      '> loading portfolio... ok',
+      '> player: Your Name',
+      '> class: UI/UX designer',
+      `> projects: ${PROJECTS.length} case files`,
+      '> mission: make products fun to use',
+      '> press start',
+    ].join('\n');
+
+    if (prefersReducedMotion) { output.textContent = text; return; }
+    let typed = 0;
+    (function type() {
+      output.textContent = text.slice(0, ++typed);
+      if (typed < text.length) setTimeout(type, typed % 7 === 0 ? 120 : 32);
+    })();
+  }
+
+  /* ==========================================================================
+     Contact: copy email (falls back to a mailto: link)
+     ========================================================================== */
+  function initCopyEmail() {
+    const button = $('copy-email');
+    const status = $('copy-status');
+    const email = button.querySelector('span').textContent.trim();
+    let resetTimer;
+
+    const showCopied = () => {
+      status.textContent = 'COPIED';
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { status.textContent = 'COPY'; }, 1800);
+    };
+    const openMailClient = () => { location.href = `mailto:${email}`; };
+
+    button.addEventListener('click', () => {
+      try {
+        navigator.clipboard.writeText(email).then(showCopied, openMailClient);
+      } catch {
+        openMailClient();
+      }
+    });
+  }
+
+  /* ==========================================================================
+     3D star: follows the mouse and spins while the page scrolls
+     (a tiny software renderer: rotate, cull back faces, sort, flat-shade)
+     ========================================================================== */
+  function initStar3d() {
+    if (matchMedia('(hover: none)').matches) return; // touch-only devices: hidden via CSS too
+
+    const SIZE = 48;            // canvas pixels (shown at 2x)
+    const RADIUS = 18;          // star radius in canvas pixels
+    const CAMERA = 4;           // perspective distance
+    const TILT = .35;           // fixed forward tilt (rad) so the depth is visible
+    const OFFSET = 28;          // star centre sits this far down-right of the pointer (px)
+    const FOLLOW = prefersReducedMotion ? 1 : .18;  // 1 = no easing
+    const DAMPING = .9;
+    const SPIN_PER_PX = .003;   // rad/frame added per px scrolled
+    const MAX_SPIN = .5;
+    const AMBIENT = .4;
+    const BASE_COLOR = [242, 201, 76];
+    const OUTLINE = '#2A1F05';
+    const LIGHT = (() => { const v = [-.45, -.55, .7]; const len = Math.hypot(...v); return v.map((n) => n / len); })();
+
+    // Geometry: a five-point star prism (front, back and ten side faces).
+    const POINTS = 5, OUTER = 1, INNER = .48, DEPTH = .3;
+    const ring = Array.from({ length: POINTS * 2 }, (_, i) => {
+      const angle = -Math.PI / 2 + i * Math.PI / POINTS;
+      const r = i % 2 ? INNER : OUTER;
+      return [Math.cos(angle) * r, Math.sin(angle) * r];
+    });
+    const faces = [
+      { normal: [0, 0, 1], verts: ring.map(([x, y]) => [x, y, DEPTH]) },
+      { normal: [0, 0, -1], verts: ring.map(([x, y]) => [x, y, -DEPTH]) },
+    ];
+    ring.forEach(([ax, ay], i) => {
+      const [bx, by] = ring[(i + 1) % ring.length];
+      let nx = by - ay, ny = -(bx - ax);
+      if (nx * (ax + bx) + ny * (ay + by) < 0) { nx = -nx; ny = -ny; } // point away from the centre
+      const len = Math.hypot(nx, ny);
+      faces.push({
+        normal: [nx / len, ny / len, 0],
+        verts: [[ax, ay, DEPTH], [bx, by, DEPTH], [bx, by, -DEPTH], [ax, ay, -DEPTH]],
+      });
+    });
+
+    const canvas = $('star-3d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const half = canvas.offsetWidth / 2 || SIZE;
+    let angle = .6, spin = 0;
+    let x = 0, y = 0, targetX = 0, targetY = 0;
+    let visible = false, running = false, lastScrollY = scrollY;
+
+    const rotate = ([px, py, pz], cosY, sinY, cosX, sinX) => {
+      const x1 = px * cosY + pz * sinY;
+      const z1 = -px * sinY + pz * cosY;
+      return [x1, py * cosX - z1 * sinX, py * sinX + z1 * cosX];
+    };
+
+    function render() {
+      const cosY = Math.cos(angle), sinY = Math.sin(angle), cosX = Math.cos(TILT), sinX = Math.sin(TILT);
+      const visibleFaces = [];
+      for (const face of faces) {
+        const normal = rotate(face.normal, cosY, sinY, cosX, sinX);
+        if (normal[2] <= .02) continue; // back-face culling
+        const points = face.verts.map((v) => rotate(v, cosY, sinY, cosX, sinX));
+        visibleFaces.push({ normal, points, depth: points.reduce((sum, p) => sum + p[2], 0) / points.length });
+      }
+      visibleFaces.sort((a, b) => a.depth - b.depth); // far to near
+
+      ctx.clearRect(0, 0, SIZE, SIZE);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = OUTLINE;
+      for (const { normal, points } of visibleFaces) {
+        const light = AMBIENT + (1 - AMBIENT) * Math.max(0, normal[0] * LIGHT[0] + normal[1] * LIGHT[1] + normal[2] * LIGHT[2]);
+        ctx.fillStyle = `rgb(${BASE_COLOR.map((c) => Math.round(c * light)).join(',')})`;
+        ctx.beginPath();
+        points.forEach(([px, py, pz], i) => {
+          const scale = RADIUS * CAMERA / (CAMERA - pz);
+          if (i) ctx.lineTo(SIZE / 2 + px * scale, SIZE / 2 + py * scale);
+          else ctx.moveTo(SIZE / 2 + px * scale, SIZE / 2 + py * scale);
+        });
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      // Remove anti-aliasing so the star keeps hard pixel edges.
+      const image = ctx.getImageData(0, 0, SIZE, SIZE);
+      for (let i = 3; i < image.data.length; i += 4) image.data[i] = image.data[i] > 110 ? 255 : 0;
+      ctx.putImageData(image, 0, 0);
+    }
+
+    function frame() {
+      x += (targetX - x) * FOLLOW;
+      y += (targetY - y) * FOLLOW;
+      angle += spin;
+      spin *= DAMPING;
+      canvas.style.transform = `translate(${x - half}px, ${y - half}px)`;
+      render();
+      if (Math.abs(targetX - x) > .3 || Math.abs(targetY - y) > .3 || Math.abs(spin) > .002) {
+        requestAnimationFrame(frame);
+      } else {
+        running = false;
+      }
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      requestAnimationFrame(frame);
+    }
+
+    document.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch') return;
+      targetX = event.clientX + OFFSET;
+      targetY = event.clientY + OFFSET;
+      if (!visible) { // appear at the pointer instead of flying in from a corner
+        visible = true;
+        x = targetX;
+        y = targetY;
+        canvas.classList.add('is-visible');
+      }
+      start();
+    });
+    document.documentElement.addEventListener('pointerleave', () => {
+      visible = false;
+      canvas.classList.remove('is-visible');
+    });
+
+    if (!prefersReducedMotion) {
+      addEventListener('scroll', () => {
+        const deltaY = scrollY - lastScrollY;
+        lastScrollY = scrollY;
+        spin = Math.max(-MAX_SPIN, Math.min(MAX_SPIN, spin + deltaY * SPIN_PER_PX));
+        start();
+      }, { passive: true });
+    }
+
+    render();
+  }
+
+  /* ==========================================================================
+     Init
+     ========================================================================== */
+  function openCaseFile(index) {
+    levelSelect.markOpened(index);
+    caseDialog.show(index);
+  }
+
+  const caseDialog = createCaseDialog({ onNavigate: openCaseFile });
+  const levelSelect = createLevelSelect({ onOpen: openCaseFile });
+  initHeroGrid();
+  initTerminal();
+  initCopyEmail();
+  initStar3d();
+})();
+</script>
+</body>
+</html>
